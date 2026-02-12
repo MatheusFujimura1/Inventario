@@ -1,0 +1,5 @@
+{
+  "name": "Inventário Inteligente SAP",
+  "description": "Aplicativo para gestão de inventário com importação em massa (copy-paste), cálculo de divergências e análise de dados via IA.",
+  "requestFramePermissions": []
+}
