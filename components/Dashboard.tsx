@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { MaterialItem } from '../types';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { AlertCircle, TrendingDown, CheckCircle2, DollarSign, Bot } from 'lucide-react';
-import { analyzeInventory } from '../services/geminiService';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { AlertCircle, TrendingDown, CheckCircle2, DollarSign } from 'lucide-react';
 
 interface DashboardProps {
   items: MaterialItem[];
 }
 
 const Dashboard: React.FC<DashboardProps> = ({ items }) => {
-  const [analysis, setAnalysis] = useState<string | null>(null);
-  const [loadingAnalysis, setLoadingAnalysis] = useState(false);
-
   const totalItems = items.length;
   const itemsWithDivergence = items.filter(i => i.divergenceQuantity !== 0);
   const totalDivergenceValue = items.reduce((acc, curr) => acc + curr.divergenceValue, 0);
@@ -31,15 +27,6 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
     }
     return acc;
   }, [] as { name: string; value: number }[]);
-
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
-
-  const handleAIAnalysis = async () => {
-    setLoadingAnalysis(true);
-    const result = await analyzeInventory(items);
-    setAnalysis(result);
-    setLoadingAnalysis(false);
-  };
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -91,33 +78,12 @@ const Dashboard: React.FC<DashboardProps> = ({ items }) => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col">
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <Bot className="w-5 h-5 text-purple-600" />
-              Análise Inteligente
-            </h3>
-            <button 
-              onClick={handleAIAnalysis}
-              disabled={loadingAnalysis || totalItems === 0}
-              className={`text-sm px-3 py-1 rounded-md border flex items-center gap-2 transition-all
-                ${loadingAnalysis ? 'bg-gray-100 text-gray-400' : 'bg-purple-50 text-purple-700 border-purple-200 hover:bg-purple-100'}`}
-            >
-              {loadingAnalysis ? 'Analisando...' : 'Gerar Análise IA'}
-            </button>
-          </div>
-          
-          <div className="flex-1 bg-gray-50 rounded-md p-4 overflow-y-auto max-h-64 border border-gray-100">
-            {analysis ? (
-              <div className="prose prose-sm prose-indigo">
-                 <pre className="whitespace-pre-wrap font-sans text-gray-700">{analysis}</pre>
-              </div>
-            ) : (
-              <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
-                <p>Clique em "Gerar Análise IA" para obter insights sobre as divergências.</p>
-              </div>
-            )}
-          </div>
+        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 flex flex-col justify-center items-center text-center">
+            <CheckCircle2 className="w-16 h-16 text-gray-200 mb-4" />
+            <h3 className="text-lg font-medium text-gray-600">Sistema Operante</h3>
+            <p className="text-gray-400 text-sm mt-2 px-8">
+              O painel está exibindo dados em tempo real baseados nos registros locais.
+            </p>
         </div>
       </div>
     </div>
